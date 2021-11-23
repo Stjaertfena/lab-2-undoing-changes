@@ -107,4 +107,57 @@ Let's say we now realize that our three commits where committed on the wrong bra
 
   ❓ **How does the outcome differ if you use `--soft`, `--hard` or `--mixed` (default when flag is omitted) when performing the `reset` action?**
 
-### Interactive rebase of remote branch (squash commits)
+### Rewriting a public history
+Consider the `super-cool-feature` branch. It has 5 commit and stems of `main`. However, the third commit (`super-cool-feature~3`) counting from the top contains an accidentally committed huge log file. Before this branch can be merged with `main` it needs to have the log file removed completely, to not bloat the repo for all eternity.
+
+Your job is to clear the file from the branch (and repo) using an interactive rebase.
+
+1. Switch to `super-cool-feature` and verify you can see the [src/tmp.log](./src/tmp.log) file in your Working Tree.
+
+1. Rebase the branch on the same commit it already stems from, e.g. the `main` branch.
+  ```
+  $ git rebase main --interactive
+  ```
+  ![Rebase Prompt](./docs/rebase-prompt.png)
+
+  In the "prompt" (which is in fact a temporary file), change from `pick` to `edit` infront of the offending commit. Save and close the "prompt". If you have not changed your default editor, this is most likely going to be [vi](https://en.wikipedia.org/wiki/Vi) or [vim](https://en.wikipedia.org/wiki/Vim_(text_editor))
+
+1. Git has now dropped you on the offending commit. You can view the state either from `gitk` or using `git status`.
+  ```
+  $ git rebase main --interactive
+
+  Stopped at bd1ee80...  Bar # empty
+  You can amend the commit now, with
+
+      git commit --amend
+
+  Once you are satisfied with your changes, run
+
+      git rebase --continue
+  ```
+  ![Rebase 1](./docs/rebase-1.png)
+
+  ```
+  $ git status
+  interactive rebase in progress; onto 04acbc7
+  Last commands done (2 commands done):
+     pick 4bbc252 Foo # empty
+     edit bd1ee80 Bar # empty
+  Next command to do (1 remaining command):
+     pick 501d07c Baz # empty
+    (use "git rebase --edit-todo" to view and edit)
+  You are currently editing a commit while rebasing branch 'feature-foo' on '04acbc7'.
+    (use "git commit --amend" to amend the current commit)
+    (use "git rebase --continue" once you are satisfied with your changes)
+
+  nothing to commit, working tree clean
+  ```
+
+1. You are now able to edit the content of the commit, and remove the log-file. For example using:
+  ```
+  $ git rm ./src/tmp.log
+  ```
+
+1. With the removal action completed, continue the rebase process with `git rebase --continue`.
+
+1. With the rebase completed, view your history again using `gitk`. ❓ **Why are only the final three commits diverging, when the rebase was started with main as starting point?**
