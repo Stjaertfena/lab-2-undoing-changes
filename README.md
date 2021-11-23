@@ -37,7 +37,7 @@ and check the source tree using `gitk`
   ```
   $ git show HEAD --no-patch
   ```
-and compare the hash with the previous one. **Why do they differ? And where did the old misspelled commit go?**
+and compare the hash with the previous one. ❓ **Why do they differ? And where did the old misspelled commit go?**
 
 1. Launch `gitk` again and provide the `--reflog` flag, or use the regular `reflog`, see if you can find the now orphaned old commit containing the misspelled message.
 
@@ -72,6 +72,7 @@ Let's say we now realize that our three commits where committed on the wrong bra
 
 1. Create a new feature branch from the tip of `main`, and call it something descriptive, using:
   ```
+  E.g.
   $ git branch feature-foo main
   ```
   Above command creates a new branch named `feature-foo` from where `main` is at, but without switching to it.
@@ -86,8 +87,24 @@ Let's say we now realize that our three commits where committed on the wrong bra
 
 1. Push your **new** branch to the remote repo, so it's safely stored on the server as well (but don't push **main**).
 
-1. With the commits stored in your new branch, it's now time to reset *main* so it's in synch with origin.
+1. With the commits stored in your new branch, it's now time to reset *main* so it's in synch with origin. Or in other words, move our local `main` branch back to point to the same commit as **_origin/main_**.
+  ```
+  E.g.
+  $ git reset origin/main
+  ```
 
-### Resetting a branch (remove unwanted files)
+  You are all done when history looks like this:
+  ![History 1](./docs/history-2.png)
+
+  and `git status` tells you:
+  ```
+  $ git status
+  On branch main
+  Your branch is up to date with 'origin/main'.
+
+  nothing to commit, working tree clean
+  ```
+
+  ❓ **How does the outcome differ if you use `--soft`, `--hard` or `--mixed` (default when flag is omitted) when performing the `reset` action?**
 
 ### Interactive rebase of remote branch (squash commits)
