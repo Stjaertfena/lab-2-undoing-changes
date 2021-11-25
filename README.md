@@ -2,16 +2,16 @@
 As a developer you're occasionally faced with the need to undo (or rather redo) a series of commits – just like the original poster of [this](https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git) Stack Overflow question (with over 10M views).
 
 Common reasons for wanting to undo changes are:
-- Accidentally committed files, such as logs, binaries, or libraries, never intended for source code management
+- Accidentally committing unwanted files, such as logs, binaries, or libraries, never intended for source code management
 - Embarassing typo in commit message
 - Committing changes on the wrong branch, e.g. straight in `main` instead of in a feature branch.
 
-In this assignment you'll learn how to rework your history based on some common problems.
+In this assignment you'll learn how to rework your history based on these common problems.
 
 ## Purpose & Goal
 - Get comfortable undoing changes and rework your git history
-- Deepen your knowledge about `remote` vs `local` branches and `remote` vs `local` repositories
-- Learn about do's and dont's related to rewriting public histories
+- Deepen your knowledge about `remote` vs `local` branches, and `remote` vs `local` repositories
+- Learn about "do's and dont's" related to rewriting public histories
 - Understand the difference between `log` and `reflog`
 
 ## Expectations
@@ -20,24 +20,29 @@ In this assignment you'll learn how to rework your history based on some common 
 
 ## The assignment
 
-### Amend last commit (local)
-1. Edit a file and write a bad commit message (the idea is to rewrite this later); don't push it to remote.
-1. Note the unique commit hash for the just created commit, for example using:
+### Amend last commit
+1. Fork and clone [THIS](https://foo.com) repo, and create a new branch off `develop`
+1. Edit [/src/index.html](./src/index.html) by changing the content of the first paragraph. Add the change and commmit it, make sure to write a bad commit message (the idea is to rewrite this later); don't push your change to remote.
+1. **Note** the unique commit hash for the just created commit, for example using:
   ```
   $ git show HEAD --no-patch
   ```
-and check the source tree using `gitk`
+  and check the source tree using `gitk`
 
-1. Now amend the commits using
+1. Now amend the commit using
   ```
   $ git commit --amend
   ```
-1. Edit the commit message and finalize the process
+  Your default editor (which is most likely going to be [vi](https://en.wikipedia.org/wiki/Vi) or [vim](https://en.wikipedia.org/wiki/Vim_(text_editor))) will open, showing information about the last commit.
+
+1. Edit the commit message and finalize the process by saving and closing the file.
 1. View the last commit again using:
   ```
   $ git show HEAD --no-patch
   ```
-and compare the hash with the previous one. ❓ **Why do they differ? And where did the old misspelled commit go?**
+  and compare the hash with the previous one.
+
+  ❓ **Why do they differ? And where did the old misspelled commit go?**
 
 1. Launch `gitk` again and provide the `--reflog` flag, or use the regular `reflog`, see if you can find the now orphaned old commit containing the misspelled message.
 
@@ -49,6 +54,8 @@ and compare the hash with the previous one. ❓ **Why do they differ? And where 
   ```
 
 1. With the orphaned commit identified, push the branch to the remote repo.
+
+Congratulations, you have now completed the first part of this assignment! 🎉
 
 ### Move branches/commits (committed in wrong branch) and reset original branch
 1. Switch to the `main` branch in THIS repo.
@@ -161,3 +168,5 @@ Your job is to clear the file from the branch (and repo) using an interactive re
 1. With the removal action completed, continue the rebase process with `git rebase --continue`.
 
 1. With the rebase completed, view your history again using `gitk`. ❓ **Why are only the final three commits diverging, when the rebase was started with main as starting point?**
+
+1. Now we need to update the remote reference... git status...
