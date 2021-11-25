@@ -58,11 +58,11 @@ In this assignment you'll learn how to rework your history based on these common
 Congratulations, you have now completed the first part of this assignment! 🎉
 
 ### Move branches/commits (committed in wrong branch) and reset original branch
-1. Switch to the `main` branch in THIS repo.
-1. Open the file [foo.html](./foo.html) and edit the first paragraph; commit your changes (but don't push it).
-1. Now make two additional changes to the file, make sure to commit the changes in two separate commits (don't push them).
+1. Switch to the `main` branch and verify it's set up to track it's remote counterpart `origin/main`.
+1. Open the file [/src/index.html](./src/index.html) and edit the first paragraph; commit your changes (but don't push it).
+1. Now make two additional changes to the file (for example adding a couple of more paragraphs). Make sure to commit the changes in two separate commits (but don't push the commits).
 
-You should now have a history where you're three commits ahead of origin, `git status` should tell you this.
+You should now have a history where you're three commits ahead of `origin/main`, `git status` should tell you this.
 
   ```
   $ git status
@@ -75,7 +75,7 @@ You should now have a history where you're three commits ahead of origin, `git s
   ```
 
 #### Resetting main
-Let's say we now realize that our three commits where committed on the wrong branch, i.e. straight onto `main` instead of a feature branch. We now need to "move" the existing commits onto a new branch, and reset our local `main` branch to be in synch with **_origin_**.
+Let's say we now realize that our three commits where committed on the wrong branch, i.e. straight onto `main` instead of a feature branch. We now need to "move" the three unpublished commits onto a new branch, and reset our local `main` branch to yet again be in synch with `origin/main`.
 
 1. Create a new feature branch from the tip of `main`, and call it something descriptive, using:
   ```
@@ -84,7 +84,7 @@ Let's say we now realize that our three commits where committed on the wrong bra
   ```
   Above command creates a new branch named `feature-foo` from where `main` is at, but without switching to it.
 
-1.  Verify that the branch got created correctly by viewing your latest commit.
+1.  Verify that the branch got created correctly by viewing your latest commit in the terminal as well as in **gitk**.
   ```
   E.g.
   $ git show main --no-patch --oneline
@@ -92,11 +92,11 @@ Let's say we now realize that our three commits where committed on the wrong bra
   ```
   ![History 1](./docs/history-1.png)
 
-1. Push your **new** branch to the remote repo, so it's safely stored on the server as well (but don't push **main**).
+1. Push your **new** branch to the remote repo, so it's safely stored on the server (but don't push **main**). Pushing a non checkedout branch can be done with: `$ git push origin feature-foo`
 
-1. With the commits stored in your new branch, it's now time to reset *main* so it's in synch with origin. Or in other words, move our local `main` branch back to point to the same commit as **_origin/main_**.
+1. With the commits stored in your new branch, it's now time to reset `main` so it's in synch with origin. Or in other words, move our local `main` branch back to point to the same commit as `origin/main`.
   ```
-  E.g.
+  E.g. below command would do the trick if main is currently checkedout
   $ git reset origin/main
   ```
 
@@ -112,24 +112,34 @@ Let's say we now realize that our three commits where committed on the wrong bra
   nothing to commit, working tree clean
   ```
 
-  ❓ **How does the outcome differ if you use `--soft`, `--hard` or `--mixed` (default when flag is omitted) when performing the `reset` action?**
+  ❓ **How does the outcome differ if you use `--soft`, `--hard` or `--mixed` when performing the `reset` action?**
+
+  ❓ **Which is the default flag?**
+
+  ❓ **Which flag is potentially destructive?**
+
+Congratulations, you have now completed the first part of this assignment! 🎉
 
 ### Rewriting a public history
-Consider the `super-cool-feature` branch. It has 5 commit and stems of `main`. However, the third commit (`super-cool-feature~3`) counting from the top contains an accidentally committed huge log file. Before this branch can be merged with `main` it needs to have the log file removed completely, to not bloat the repo for all eternity.
+Now consider the `super-cool-feature` branch also present in this repo. It has 5 commits and stems of `main`. However, the third commit (`super-cool-feature~3`) counting from the top contains an accidentally committed huge log file. Before this branch can be merged with `main` it needs to have the log file removed completely, to not bloat the repo for all eternity.
 
-Your job is to clear the file from the branch (and repo) using an interactive rebase.
+HISTORY IMAGE
 
-1. Switch to `super-cool-feature` and verify you can see the [src/tmp.log](./src/tmp.log) file in your Working Tree.
+What's different this time is that the branch about to be rewritten is already present on remote, also it's not the last commit that contains the error but an earlier commit.
 
-1. Rebase the branch on the same commit it already stems from, e.g. the `main` branch.
+Your job is to clear the file from the branch using an interactive rebase and update both the **local** and **remote** repos.
+
+  1. Switch to `super-cool-feature` and verify you can see the [src/tmp.log](./src/tmp.log) file in your Working Tree.
+
+  1. Rebase the branch on the same commit it already stems from, e.g. the `main` branch.
   ```
   $ git rebase main --interactive
   ```
   ![Rebase Prompt](./docs/rebase-prompt.png)
 
-  In the "prompt" (which is in fact a temporary file), change from `pick` to `edit` infront of the offending commit. Save and close the "prompt". If you have not changed your default editor, this is most likely going to be [vi](https://en.wikipedia.org/wiki/Vi) or [vim](https://en.wikipedia.org/wiki/Vim_(text_editor))
+  In the "prompt" (which is in fact a temporary file), change from `pick` to `edit` infront of the offending commit. Save and close the "prompt". If you have not changed your default editor, this is most likely going to be [vi](https://en.wikipedia.org/wiki/Vi) or [vim](https://en.wikipedia.org/wiki/Vim_(text_editor)).
 
-1. Git has now dropped you on the offending commit. You can view the state either from `gitk` or using `git status`.
+  1. Git has now dropped you on the offending commit. You can view the state either from `gitk` or using `git status`.
   ```
   $ git rebase main --interactive
 
@@ -160,13 +170,41 @@ Your job is to clear the file from the branch (and repo) using an interactive re
   nothing to commit, working tree clean
   ```
 
-1. You are now able to edit the content of the commit, and remove the log-file. For example using:
+  1. You are now able to edit the content of the commit, and remove the log-file. For example using:
   ```
   $ git rm ./src/tmp.log
   ```
 
-1. With the removal action completed, continue the rebase process with `git rebase --continue`.
+  1. With the removal action completed, continue the rebase process with `git rebase --continue`.
 
-1. With the rebase completed, view your history again using `gitk`. ❓ **Why are only the final three commits diverging, when the rebase was started with main as starting point?**
+  1. With the rebase completed, view your history again using `gitk`.
 
-1. Now we need to update the remote reference... git status...
+  ❓ **Why are only the final three commits diverging, when the rebase was started with main as starting point?**
+
+**Forcefully update remote reference**
+
+With our local branch cleared from the offending log-file, it's time to persist the change remotely as well.
+1. Start by identifying your current state using:
+  ```
+  $ git status
+
+  On branch super-cool-feature
+  Your branch and 'origin/super-cool-feature' have diverged,
+  and have 4 and 4 different commits each, respectively.
+      (use "git pull" to merge the remote branch into yours)
+
+  nothing to commit, working tree clean
+  ```
+  Notice that you are now 4 commits ahead and 4 behind at the same time.
+
+1. Try publishing your change using a regular `push` and notice the feedback given by the terminal
+
+1. Since you've rewritten a public history, it now needs to be forcefully overwritten on the remote server. **THIS IS A DESTRUCTIVE OPERATION - only perform this on branches you control!** Use below command to forcefully overwrite the remote branch.
+  ```
+  $ git push origin super-cool-feature --force
+  ```
+  If other developers have already based any new changes on this history, they'll be confused by your rewritten history. Communication is everything.
+
+1. Now verify that everything looks as expected by running `git status` and confirm by inspecting the history in `gitk`. `super-cool-feature` and `origin/super-cool-feature` should now be in synch!
+
+Congratulations, you have now completed the final part of this assignment! 🎉
