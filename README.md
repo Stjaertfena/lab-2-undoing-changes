@@ -1,4 +1,7 @@
 # Lab 2 - Undoing changes
+![main](./docs/unsplash-main.jpeg)
+Photo by <a href="https://unsplash.com/@wilsonjim?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jim Wilson</a> on <a href="https://unsplash.com/s/photos/revert?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
 As a developer you're occasionally faced with the need to undo (or rather redo) a series of commits – just like the original poster of [this](https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git) Stack Overflow question (with over 10M views).
 
 Common reasons for wanting to undo changes are:
