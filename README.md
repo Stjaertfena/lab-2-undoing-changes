@@ -139,7 +139,7 @@ What's different this time is that the branch about to be rewritten is already p
 
 Your job is to clear the file from the branch using an interactive rebase and update both the **local** and **remote** repos.
 
-  1. Switch to `super-cool-feature` and verify you can see the [src/tmp.log](./src/tmp.log) file in your Working Tree.
+  1. Switch to `super-cool-feature` and verify you can see the _tmp.log_ file in your Working Tree.
 
   1. Rebase the branch on the same commit it already stems from, e.g. the `main` branch.
   ```
@@ -185,7 +185,7 @@ Your job is to clear the file from the branch using an interactive rebase and up
 
   1. You are now able to edit the content of the commit, and remove the log-file. For example using:
   ```
-  $ git rm ./src/tmp.log
+  $ git rm ./tmp.log
   ```
 
   1. With the removal action completed, continue the rebase process with `git rebase --continue`.
