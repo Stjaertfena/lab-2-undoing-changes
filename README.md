@@ -1,13 +1,13 @@
-# Lab 2 - Undoing changes
+# Assignment 2 - Undoing changes
 ![main](./docs/unsplash-main.jpeg)
 Photo by <a href="https://unsplash.com/@wilsonjim?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jim Wilson</a> on <a href="https://unsplash.com/s/photos/revert?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
 
 As a developer you're occasionally faced with the need to undo (or rather redo) a series of commits – just like the original poster of [this](https://stackoverflow.com/questions/927358/how-do-i-undo-the-most-recent-local-commits-in-git) Stack Overflow question (with over 10M views).
 
 Common reasons for wanting to undo changes are:
-- Accidentally committing unwanted files, such as logs, binaries, or libraries, never intended for source code management
-- Embarassing typo in commit message
+- Embarassing typo in commit message (or forgotten changes/files as part of commit)
 - Committing changes on the wrong branch, e.g. straight in `main` instead of in a feature branch.
+- Committing unwanted files, such as logs, binaries, or libraries, never intended for source code versioning
 
 In this assignment you'll learn how to rework your history based on these common problems.
 
@@ -22,15 +22,21 @@ In this assignment you'll learn how to rework your history based on these common
 - For actions/operations performed on one computer – pair program!
 
 ## The assignment
+This assignment allows you to practice undoing common mistakes.
+
+In short:
+- [ ] Amend a previous commit
+- [ ] Reset a branch to a previous state
+- [ ] Rewrite a public history
 
 ### Amend last commit
-1. Fork and clone [THIS](https://foo.com) repo, and create a new branch off `develop`
+1. __Fork__ and __clone__ [THIS](https://github.com/Stjaertfena/assignment-2-app) repo, and create a new branch off `develop`
 1. Edit [/src/index.html](./src/index.html) by changing the content of the first paragraph. Add the change and commmit it, make sure to write a bad commit message (the idea is to rewrite this later); don't push your change to remote.
 1. **Note** the unique commit hash for the just created commit, for example using:
   ```
   $ git show HEAD --no-patch
   ```
-  and check the source tree using `gitk`
+  and check the source tree using `$ gitk --all`, or `$ git log --graph --all --oneline`
 
 1. Now amend the commit using
   ```
@@ -56,13 +62,15 @@ In this assignment you'll learn how to rework your history based on these common
   $ git reflog
   ```
 
-1. With the orphaned commit identified, push the branch to the remote repo.
+1. With the orphaned commit identified, push the branch to your forked remote repo.
 
 Congratulations, you have now completed the first part of this assignment! 🎉
 
 ### Move branches/commits (committed in wrong branch) and reset original branch
 1. Switch to the `main` branch and verify it's set up to track it's remote counterpart `origin/main`.
+
 1. Open the file [/src/index.html](./src/index.html) and edit the first paragraph; commit your changes (but don't push it).
+
 1. Now make two additional changes to the file (for example adding a couple of more paragraphs). Make sure to commit the changes in two separate commits (but don't push the commits).
 
 You should now have a history where you're three commits ahead of `origin/main`, `git status` should tell you this.
@@ -78,7 +86,7 @@ You should now have a history where you're three commits ahead of `origin/main`,
   ```
 
 #### Resetting main
-Let's say we now realize that our three commits where committed on the wrong branch, i.e. straight onto `main` instead of a feature branch. We now need to "move" the three unpublished commits onto a new branch, and reset our local `main` branch to yet again be in synch with `origin/main`.
+Let's say we now realize that our three commits were committed on the wrong branch, i.e. straight onto `main` instead of a feature branch. We now need to "move" the three unpublished commits onto a new branch, and reset our local `main` branch to yet again be in synch with `origin/main`.
 
 1. Create a new feature branch from the tip of `main`, and call it something descriptive, using:
   ```
@@ -95,15 +103,15 @@ Let's say we now realize that our three commits where committed on the wrong bra
   ```
   ![History 1](./docs/history-1.png)
 
-1. Push your **new** branch to the remote repo, so it's safely stored on the server (but don't push **main**). Pushing a non checkedout branch can be done with: `$ git push origin feature-foo`
+1. Push your **new** branch to your remote fork, so it's safely stored on the server (but don't push **main**). Pushing a non checkedout branch can be done with: `$ git push origin feature-foo`
 
 1. With the commits stored in your new branch, it's now time to reset `main` so it's in synch with origin. Or in other words, move our local `main` branch back to point to the same commit as `origin/main`.
   ```
   E.g. below command would do the trick if main is currently checkedout
-  $ git reset origin/main
+  $ git reset --hard origin/main
   ```
 
-  You are all done when history looks like this:
+  You are all done when history resembles something like this (_main_ and _origin/main_ should be in sync and your feature branch should be three commits ahead):
   ![History 1](./docs/history-2.png)
 
   and `git status` tells you:
@@ -124,9 +132,9 @@ Let's say we now realize that our three commits where committed on the wrong bra
 Congratulations, you have now completed the first part of this assignment! 🎉
 
 ### Rewriting a public history
-Now consider the `super-cool-feature` branch also present in this repo. It has 5 commits and stems of `main`. However, the third commit (`super-cool-feature~3`) counting from the top contains an accidentally committed huge log file. Before this branch can be merged with `main` it needs to have the log file removed completely, to not bloat the repo for all eternity.
+Now consider the `super-cool-feature` branch also present in this repo. It has 5 commits and stems of `main`. However, the third commit (`super-cool-feature~2`) counting from the top contains an accidentally committed huge log file. Before this branch can be merged with `main` it needs to have the log file removed completely, to not bloat the repo for all eternity – but without loosing the color change also present in the same commit.
 
-HISTORY IMAGE
+  ![Rebase Prompt](./docs/history-log.png)
 
 What's different this time is that the branch about to be rewritten is already present on remote, also it's not the last commit that contains the error but an earlier commit.
 
@@ -138,11 +146,14 @@ Your job is to clear the file from the branch using an interactive rebase and up
   ```
   $ git rebase main --interactive
   ```
+  Below is just an illustration of the interactive rebase "prompt", your's will of course contain the commits you just selected. Do note that the commits here are listed in reversed order, with the most recent commit at the bottom.
   ![Rebase Prompt](./docs/rebase-prompt.png)
 
-  In the "prompt" (which is in fact a temporary file), change from `pick` to `edit` infront of the offending commit. Save and close the "prompt". If you have not changed your default editor, this is most likely going to be [vi](https://en.wikipedia.org/wiki/Vi) or [vim](https://en.wikipedia.org/wiki/Vim_(text_editor)).
+  In the "prompt" (which is in fact a temporary file), change from `pick` to `edit` infront of the offending commit. Save and close the "prompt".
 
-  1. Git has now dropped you on the offending commit. You can view the state either from `gitk` or using `git status`.
+  If you have not changed your default editor, this is most likely going to be [vi](https://en.wikipedia.org/wiki/Vi) or [vim](https://en.wikipedia.org/wiki/Vim_(text_editor)). Need help with the commands, checkout this [cheat sheet](https://www.thegeekdiary.com/basic-vi-commands-cheat-sheet/).
+
+  1. Git has now dropped you on the offending commit. You can view the state either from `gitk` or using `git status`. Below output and screenshot only serves as an illustration, you'd be seeing something different.
   ```
   $ git rebase main --interactive
 
@@ -200,7 +211,7 @@ With our local branch cleared from the offending log-file, it's time to persist 
   ```
   Notice that you are now 4 commits ahead and 4 behind at the same time.
 
-1. Try publishing your change using a regular `push` and notice the feedback given by the terminal
+1. Try publishing your change using a regular `push` and notice the feedback given by the terminal.
 
 1. Since you've rewritten a public history, it now needs to be forcefully overwritten on the remote server. **THIS IS A DESTRUCTIVE OPERATION - only perform this on branches you control!** Use below command to forcefully overwrite the remote branch.
   ```
