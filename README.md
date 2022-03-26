@@ -18,8 +18,7 @@ In this assignment you'll learn how to rework your history based on these common
 - Understand the difference between `log` and `reflog`
 
 ## Expectations
-- Work in pairs
-- For actions/operations performed on one computer – pair program!
+- Work in pairs and pair program on one computer
 
 ## The assignment
 This assignment allows you to practice undoing common mistakes.
