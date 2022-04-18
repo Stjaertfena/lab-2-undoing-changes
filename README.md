@@ -29,28 +29,28 @@ In short:
 - [ ] Rewrite a public history
 
 ### Amend last commit
-1. __Fork__ and __clone__ [THIS](https://github.com/Stjaertfena/assignment-2-app) repo, and create a new branch off `develop`
-1. Edit [/src/index.html](./src/index.html) by changing the content of the first paragraph. Add the change and commmit it, make sure to write a bad commit message (the idea is to rewrite this later); don't push your change to remote.
+1. __Fork__ and __clone__ [THIS](https://github.com/Stjaertfena/assignment-2-app) repo, and create a new branch off `develop` (name it whatever you like)
+1. Edit the `/src/index.html` file (in the cloned repo) by changing the content of the first paragraph (write whatever you like). Add the change and commmit it, make sure to write a **_bad_** commit message (the idea is to rewrite this later); don't push your change to remote!
 1. **Note** the unique commit hash for the just created commit, for example using:
   ```
   $ git show HEAD --no-patch
   ```
-  and check the source tree using `$ gitk --all`, or `$ git log --graph --all --oneline`
+  and check the history using `$ gitk --all`, or `$ git log --graph --all --oneline`
 
-1. Now amend the commit using
+1. Now amend the commit (to fix your error) using
   ```
   $ git commit --amend
   ```
   Your default editor (which is most likely going to be [vi](https://en.wikipedia.org/wiki/Vi) or [vim](https://en.wikipedia.org/wiki/Vim_(text_editor))) will open, showing information about the last commit.
 
-1. Edit the commit message and finalize the process by saving and closing the file.
+1. Edit the commit message (and correct your error), finalize the process by saving and closing the file.
 1. View the last commit again using:
   ```
   $ git show HEAD --no-patch
   ```
-  and compare the hash with the previous one.
+  and compare the hash with the previous one. You can also refresh/reload `gitk`, pay close attention to your history.
 
-  ❓ **Why do they differ? And where did the old misspelled commit go?**
+  ❓ **Why do hashes differ? And where did the old misspelled commit go?**
 
 1. Launch `gitk` again and provide the `--reflog` flag, or use the regular `reflog`, see if you can find the now orphaned old commit containing the misspelled message.
 
@@ -63,14 +63,14 @@ In short:
 
 1. With the orphaned commit identified, push the branch to your forked remote repo.
 
-Congratulations, you have now completed the first part of this assignment! 🎉
+Congratulations, you have now completed the first part of this assignment! Simply amending the last unpublished commit. 🎉
 
 ### Move branches/commits (committed in wrong branch) and reset original branch
 1. Switch to the `main` branch and verify it's set up to track it's remote counterpart `origin/main`.
 
-1. Open the file [/src/index.html](./src/index.html) and edit the first paragraph; commit your changes (but don't push it).
+1. Open the file `/src/index.html` (again, in your forked repo) and edit the first paragraph (write whatever you like); commit your changes (but don't push it!).
 
-1. Now make two additional changes to the file (for example adding a couple of more paragraphs). Make sure to commit the changes in two separate commits (but don't push the commits).
+1. Now make two additional changes to the file (for example adding a couple of more paragraphs). Make sure to commit the changes in two separate commits (but don't push the commits!).
 
 You should now have a history where you're three commits ahead of `origin/main`, `git status` should tell you this.
 
@@ -85,7 +85,7 @@ You should now have a history where you're three commits ahead of `origin/main`,
   ```
 
 #### Resetting main
-Let's say we now realize that our three commits were committed on the wrong branch, i.e. straight onto `main` instead of a feature branch. We now need to "move" the three unpublished commits onto a new branch, and reset our local `main` branch to yet again be in synch with `origin/main`.
+Let's say we now realize that our three commits were committed on the wrong branch, i.e. straight onto `main` instead of a feature branch. We now need to "move" the three _unpublished_ commits onto a new branch, and reset our local `main` branch to yet again be in synch with `origin/main`.
 
 1. Create a new feature branch from the tip of `main`, and call it something descriptive, using:
   ```
@@ -97,21 +97,27 @@ Let's say we now realize that our three commits were committed on the wrong bran
 1.  Verify that the branch got created correctly by viewing your latest commit in the terminal as well as in **gitk**.
   ```
   E.g.
-  $ git show main --no-patch --oneline
-  501d07c (HEAD -> main, feature-foo) Foo
+  $ git log --graph --oneline --no-patch
+
+  * 501d07c (HEAD -> main, feature-foo) Baz
+  * a9904a1 Bar
+  * 3687568 Foo
+  * 848020f (origin/main) Init repo
   ```
   ![History 1](./docs/history-1.png)
+  Above history is just an example, your's will be different but should still be three commits ahead of `origin/main`!
 
-1. Push your **new** branch to your remote fork, so it's safely stored on the server (but don't push **main**). Pushing a non checkedout branch can be done with: `$ git push origin feature-foo`
+1. Push your **new** branch to your remote fork, so it's safely stored on the server (but don't push **main**!). Pushing a non checked-out branch can be done with: `$ git push origin feature-foo`
 
 1. With the commits stored in your new branch, it's now time to reset `main` so it's in synch with origin. Or in other words, move our local `main` branch back to point to the same commit as `origin/main`.
   ```
-  E.g. below command would do the trick if main is currently checkedout
+  E.g. below command would do the trick if main is currently checked-out
   $ git reset --hard origin/main
   ```
 
   You are all done when history resembles something like this (_main_ and _origin/main_ should be in sync and your feature branch should be three commits ahead):
   ![History 1](./docs/history-2.png)
+  _Above picture doesn't contain a remote-tracking branch for feature-foo, but yours should._
 
   and `git status` tells you:
   ```
@@ -128,20 +134,20 @@ Let's say we now realize that our three commits were committed on the wrong bran
 
   ❓ **Which flag is potentially destructive?**
 
-Congratulations, you have now completed the first part of this assignment! 🎉
+Congratulations, you have now completed the second part of this assignment! Resetting a branch to a previous state, and "moving" commits onto a new branch! 🎉
 
 ### Rewriting a public history
-Now consider the `super-cool-feature` branch also present in this repo. It has 5 commits and stems of `main`. However, the third commit (`super-cool-feature~2`) counting from the top contains an accidentally committed huge log file. Before this branch can be merged with `main` it needs to have the log file removed completely, to not bloat the repo for all eternity – but without loosing the color change also present in the same commit.
+Now consider the `super-cool-feature` branch (also present in your forked and cloned repo). It has 5 commits and stems of `main`. However, the third commit (`super-cool-feature~2`) counting from the top contains an accidentally committed huge log file. Before this branch can be merged with `main` it needs to have the log file removed completely, to not bloat the repo for all eternity – but without loosing the color change also present in the same commit.
 
   ![Rebase Prompt](./docs/history-log.png)
 
-What's different this time is that the branch about to be rewritten is already present on remote, also it's not the last commit that contains the error but an earlier commit.
+What's different this time is that the branch about to be rewritten is already present on remote (i.e. the branch and it's commit has already been publicly available), also it's not the last commit that contains the error but an earlier commit.
 
-Your job is to clear the file from the branch using an interactive rebase and update both the **local** and **remote** repos.
+Your job is to clear the file from the branch using an _interactive rebase_ and update both the **local** and **remote** repos.
 
   1. Switch to `super-cool-feature` and verify you can see the _tmp.log_ file in your Working Tree.
 
-  1. Rebase the branch on the same commit it already stems from, e.g. the `main` branch.
+  1. Rebase the branch on the same commit it already stems from and make sure to provide the `--interactive` flag, e.g. the `main` branch.
   ```
   $ git rebase main --interactive
   ```
@@ -169,18 +175,21 @@ Your job is to clear the file from the branch using an interactive rebase and up
 
   ```
   $ git status
-  interactive rebase in progress; onto 04acbc7
-  Last commands done (2 commands done):
-     pick 4bbc252 Foo # empty
-     edit bd1ee80 Bar # empty
-  Next command to do (1 remaining command):
-     pick 501d07c Baz # empty
-    (use "git rebase --edit-todo" to view and edit)
-  You are currently editing a commit while rebasing branch 'feature-foo' on '04acbc7'.
-    (use "git commit --amend" to amend the current commit)
-    (use "git rebase --continue" once you are satisfied with your changes)
+    interactive rebase in progress; onto 04acbc7
 
-  nothing to commit, working tree clean
+    Last commands done (2 commands done):
+       pick 4bbc252 Foo # empty
+       edit bd1ee80 Bar # empty
+
+    Next command to do (1 remaining command):
+       pick 501d07c Baz # empty
+      (use "git rebase --edit-todo" to view and edit)
+
+    You are currently editing a commit while rebasing branch 'feature-foo' on '04acbc7'.
+      (use "git commit --amend" to amend the current commit)
+      (use "git rebase --continue" once you are satisfied with your changes)
+
+    nothing to commit, working tree clean
   ```
 
   1. You are now able to edit the content of the commit, and remove the log-file. For example using:
@@ -194,9 +203,9 @@ Your job is to clear the file from the branch using an interactive rebase and up
 
   ❓ **Why are only the final three commits diverging, when the rebase was started with main as starting point?**
 
-**Forcefully update remote reference**
+**Forcefully update remote reference (e.g. rewriting public histories)**
 
-With our local branch cleared from the offending log-file, it's time to persist the change remotely as well.
+With our local branch cleared from the offending log-file, it's time to persist the change remotely as well. But since the branch and it's commits was already present on remote, we need to forcefully overwrite it (rewriting the public history).
 1. Start by identifying your current state using:
   ```
   $ git status
@@ -216,8 +225,11 @@ With our local branch cleared from the offending log-file, it's time to persist 
   ```
   $ git push origin super-cool-feature --force
   ```
-  If other developers have already based any new changes on this history, they'll be confused by your rewritten history. Communication is everything.
+  If other developers have already based any new changes on this history, they'll be confused by your rewritten history. Communication is everything!
 
 1. Now verify that everything looks as expected by running `git status` and confirm by inspecting the history in `gitk`. `super-cool-feature` and `origin/super-cool-feature` should now be in synch!
 
-Congratulations, you have now completed the final part of this assignment! 🎉
+Congratulations, you have now completed the final part of this assignment, and learnt how to rewrite a public history! 🎉
+
+
+![Spiderman](./docs/spiderman.jpeg)
